@@ -1,0 +1,1041 @@
+<title>MY:RAKL Streaming Trends</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,440;9..144,560;9..144,650&family=IBM+Plex+Sans+KR:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root{
+    --bg: #F1EFE9;
+    --surface: #FFFFFF;
+    --surface-2: #FAF8F3;
+    --text: #1C1B18;
+    --text-muted: #6E6A61;
+    --border: #DFDACD;
+    --accent: #0E7A72;
+    --accent-soft: #E4F1EE;
+    --negative: #B3492F;
+
+    --s1: hsl(175 48% 34%);
+    --s2: hsl(207 46% 42%);
+    --s3: hsl(250 34% 50%);
+    --s4: hsl(320 40% 46%);
+    --s5: hsl(18 60% 46%);
+    --s6: hsl(45 62% 40%);
+    --s7: hsl(96 32% 36%);
+    --s8: hsl(350 50% 42%);
+    --s9: hsl(135 38% 36%);
+    --s10: hsl(228 42% 48%);
+    --s11: hsl(285 36% 48%);
+    --s12: hsl(70 46% 36%);
+
+    --font-display: 'Fraunces', 'Noto Serif KR', serif;
+    --font-body: 'IBM Plex Sans KR', 'IBM Plex Sans', -apple-system, sans-serif;
+    --font-mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', monospace;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg: #14161A;
+      --surface: #1C1F25;
+      --surface-2: #20242B;
+      --text: #ECEAE3;
+      --text-muted: #9B978D;
+      --border: #33373F;
+      --accent: #4FD9C4;
+      --accent-soft: #1D3532;
+      --negative: #E38268;
+
+      --s1: hsl(175 55% 58%);
+      --s2: hsl(207 60% 66%);
+      --s3: hsl(250 55% 74%);
+      --s4: hsl(320 55% 70%);
+      --s5: hsl(20 70% 66%);
+      --s6: hsl(45 70% 62%);
+      --s7: hsl(96 40% 60%);
+      --s8: hsl(350 62% 66%);
+      --s9: hsl(135 45% 60%);
+      --s10: hsl(228 55% 70%);
+      --s11: hsl(285 50% 72%);
+      --s12: hsl(70 55% 58%);
+    }
+  }
+
+  :root[data-theme="dark"]{
+    --bg: #14161A;
+    --surface: #1C1F25;
+    --surface-2: #20242B;
+    --text: #ECEAE3;
+    --text-muted: #9B978D;
+    --border: #33373F;
+    --accent: #4FD9C4;
+    --accent-soft: #1D3532;
+    --negative: #E38268;
+
+    --s1: hsl(175 55% 58%);
+    --s2: hsl(207 60% 66%);
+    --s3: hsl(250 55% 74%);
+    --s4: hsl(320 55% 70%);
+    --s5: hsl(20 70% 66%);
+    --s6: hsl(45 70% 62%);
+    --s7: hsl(96 40% 60%);
+    --s8: hsl(350 62% 66%);
+    --s9: hsl(135 45% 60%);
+    --s10: hsl(228 55% 70%);
+    --s11: hsl(285 50% 72%);
+    --s12: hsl(70 55% 58%);
+  }
+
+  *{ box-sizing: border-box; }
+  html{ color-scheme: light dark; }
+
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-body);
+    margin: 0;
+  }
+
+  .page{
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 3.5rem 1.5rem 5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+  }
+
+  .hero{
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+
+  .eyebrow{
+    margin: 0;
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  h1{
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: clamp(2.1rem, 5vw, 3rem);
+    text-wrap: balance;
+    letter-spacing: -0.01em;
+  }
+
+  .meta{
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.95rem;
+  }
+  .meta span{ font-family: var(--font-mono); }
+
+  .totals{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+  }
+  .totals .cell{
+    background: var(--surface);
+    padding: 1.1rem 1.3rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+  }
+  .totals .label{
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .totals .value{
+    font-family: var(--font-mono);
+    font-size: 1.5rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .totals .delta{
+    font-family: var(--font-mono);
+    font-size: 0.85rem;
+    color: var(--accent);
+  }
+
+  h2{
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: 1.4rem;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .cards{
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+  }
+
+  .card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.2rem 1.3rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.9rem;
+  }
+
+  .card-head{
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+  }
+
+  .card-head .name{
+    font-family: var(--font-display);
+    font-weight: 560;
+    font-size: 1.15rem;
+    text-wrap: balance;
+  }
+  .card-head .dot{
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex: none;
+    margin-top: 0.35rem;
+  }
+
+  .stat-row{
+    display: flex;
+    gap: 1.4rem;
+  }
+  .stat{
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+  }
+  .stat .label{
+    font-size: 0.72rem;
+    color: var(--text-muted);
+    letter-spacing: 0.02em;
+  }
+  .stat .value{
+    font-family: var(--font-mono);
+    font-size: 1.15rem;
+    font-variant-numeric: tabular-nums;
+  }
+  .stat .delta{
+    font-family: var(--font-mono);
+    font-size: 0.78rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.2rem;
+  }
+  .delta.pos{ color: var(--accent); }
+  .delta.neg{ color: var(--negative); }
+  .delta.flat{ color: var(--text-muted); }
+
+  .spark{
+    width: 100%;
+    height: 64px;
+    display: block;
+  }
+
+  .compare{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 1.4rem 1.5rem 1.2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .compare-head{ display:flex; flex-direction:column; gap:0.3rem; }
+  .compare-head .hint{
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--text-muted);
+  }
+
+  .chart-wrap{
+    width: 100%;
+    overflow-x: auto;
+  }
+  #compareChart{
+    width: 100%;
+    height: 340px;
+    display: block;
+    min-width: 480px;
+  }
+
+  .legend{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.9rem 1.3rem;
+  }
+  .legend-item{
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    font-family: var(--font-mono);
+  }
+  .legend-item .swatch{
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 2px;
+    flex: none;
+  }
+
+  .table-wrap{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .table-scroll{
+    overflow-x: auto;
+    overflow-y: auto;
+    max-height: 480px;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  table{
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 640px;
+    font-size: 0.88rem;
+  }
+  thead th{
+    text-align: left;
+    font-weight: 500;
+    color: var(--text-muted);
+    font-size: 0.76rem;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    padding: 0.7rem 0.9rem;
+    background: var(--surface-2);
+    border-bottom: 1px solid var(--border);
+    position: sticky;
+    top: 0;
+  }
+  tbody td{
+    padding: 0.55rem 0.9rem;
+    border-bottom: 1px solid var(--border);
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+  }
+  tbody td.name-cell{
+    font-family: var(--font-body);
+    white-space: normal;
+  }
+  tbody tr:last-child td{ border-bottom: none; }
+  .num{ text-align: right; }
+  tbody tr.group-start td{ border-top: 1px solid var(--border); }
+
+  .note{
+    border-top: 1px solid var(--border);
+    padding-top: 1.4rem;
+  }
+  .note p{
+    margin: 0;
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.6;
+    max-width: 62ch;
+  }
+  .note code{
+    font-family: var(--font-mono);
+    background: var(--surface-2);
+    padding: 0.1rem 0.35rem;
+    border-radius: 4px;
+    font-size: 0.82em;
+  }
+
+  @media (max-width: 560px){
+    .stat-row{ gap: 1rem; }
+    .totals{ grid-template-columns: 1fr; }
+  }
+</style>
+
+<div class="page">
+
+  <header class="hero">
+    <p class="eyebrow">MY:RAKL · Melon 스트리밍 트래킹</p>
+    <h1>Streaming Trends</h1>
+    <p class="meta"><span id="songCount"></span> · <span id="dateRange"></span> · 매일 06:00 KST 자동 수집</p>
+  </header>
+
+  <section class="totals" id="totals"></section>
+
+  <section style="display:flex; flex-direction:column; gap:1rem;">
+    <h2>곡별 추이</h2>
+    <div class="cards" id="cards"></div>
+  </section>
+
+  <section class="compare">
+    <div class="compare-head">
+      <h2>성장률 비교 <span style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted); font-weight: 400;">(첫날 = 100)</span></h2>
+      <p class="hint">누적 규모가 다른 곡들을 같은 기준선에서 비교합니다 — 값이 클수록 그 기간 동안 더 빠르게 늘었다는 뜻입니다.</p>
+    </div>
+    <div class="chart-wrap"><canvas id="compareChart"></canvas></div>
+    <div class="legend" id="legend"></div>
+  </section>
+
+  <section class="table-wrap">
+    <h2>원본 데이터</h2>
+    <p class="hint" style="margin: -0.6rem 0 0; font-size: 0.85rem; color: var(--text-muted);">곡별로 최신 날짜가 위에 오도록 정렬했습니다.</p>
+    <div class="table-scroll">
+      <table id="dataTable">
+        <thead>
+          <tr>
+            <th>곡</th>
+            <th>날짜</th>
+            <th class="num">누적 스트리밍</th>
+            <th class="num">전일 대비</th>
+            <th class="num">누적 리스너</th>
+            <th class="num">전일 대비</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+    </div>
+  </section>
+
+  <footer class="note">
+    <p>데이터는 Melon MCP <code>get_song_streaming_report</code>(public)로 매일 06:00 KST에 자동 수집되어 GitHub 레포에 기록됩니다.</p>
+  </footer>
+
+</div>
+
+<script>
+  const RAW = /*__RAW_DATA__*/[
+  {
+    "id": "602872003",
+    "name": "서툰 항해일지",
+    "color": "--s1",
+    "days": [
+      {
+        "date": "2026-08-26",
+        "streaming": 327,
+        "user": 245
+      }
+    ]
+  },
+  {
+    "id": "602624099",
+    "name": "꿈의 선장",
+    "color": "--s2",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 6868,
+        "user": 2984
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 7527,
+        "user": 3127
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 7759,
+        "user": 3173
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 7992,
+        "user": 3213
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 8231,
+        "user": 3248
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 8422,
+        "user": 3286
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 8562,
+        "user": 3316
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 8790,
+        "user": 3370
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 9008,
+        "user": 3412
+      }
+    ]
+  },
+  {
+    "id": "602376685",
+    "name": "지나갈테니",
+    "color": "--s3",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 13022,
+        "user": 3816
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 13277,
+        "user": 3840
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 13383,
+        "user": 3846
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 13500,
+        "user": 3846
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 13633,
+        "user": 3849
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 13725,
+        "user": 3858
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 13773,
+        "user": 3863
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 13859,
+        "user": 3867
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 13946,
+        "user": 3870
+      }
+    ]
+  },
+  {
+    "id": "602091009",
+    "name": "6층",
+    "color": "--s4",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 14413,
+        "user": 3184
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 14555,
+        "user": 3199
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 14632,
+        "user": 3200
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 14707,
+        "user": 3200
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 14805,
+        "user": 3207
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 14873,
+        "user": 3211
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 14910,
+        "user": 3216
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 14972,
+        "user": 3219
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 15041,
+        "user": 3222
+      }
+    ]
+  },
+  {
+    "id": "601791924",
+    "name": "느려도 괜찮아",
+    "color": "--s5",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 25359,
+        "user": 4313
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 25716,
+        "user": 4328
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 25984,
+        "user": 4330
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 26138,
+        "user": 4334
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 26249,
+        "user": 4335
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 26351,
+        "user": 4338
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 26389,
+        "user": 4340
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 26491,
+        "user": 4344
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 26594,
+        "user": 4344
+      }
+    ]
+  },
+  {
+    "id": "601604153",
+    "name": "배달해줘",
+    "color": "--s6",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 33574,
+        "user": 4187
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 33727,
+        "user": 4194
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 33802,
+        "user": 4194
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 33894,
+        "user": 4195
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 33983,
+        "user": 4199
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 34046,
+        "user": 4201
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 34067,
+        "user": 4201
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 34105,
+        "user": 4202
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 34149,
+        "user": 4203
+      }
+    ]
+  },
+  {
+    "id": "601396535",
+    "name": "좋을때야",
+    "color": "--s7",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 54141,
+        "user": 5871
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 54309,
+        "user": 5880
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 54395,
+        "user": 5887
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 54491,
+        "user": 5889
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 54581,
+        "user": 5891
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 54657,
+        "user": 5896
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 54695,
+        "user": 5899
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 54753,
+        "user": 5900
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 54814,
+        "user": 5905
+      }
+    ]
+  },
+  {
+    "id": "601033605",
+    "name": "별들에게 물어봐",
+    "color": "--s8",
+    "days": [
+      {
+        "date": "2026-08-18",
+        "streaming": 61027,
+        "user": 5273
+      },
+      {
+        "date": "2026-08-19",
+        "streaming": 61162,
+        "user": 5277
+      },
+      {
+        "date": "2026-08-20",
+        "streaming": 61271,
+        "user": 5281
+      },
+      {
+        "date": "2026-08-21",
+        "streaming": 61376,
+        "user": 5283
+      },
+      {
+        "date": "2026-08-22",
+        "streaming": 61454,
+        "user": 5287
+      },
+      {
+        "date": "2026-08-23",
+        "streaming": 61520,
+        "user": 5289
+      },
+      {
+        "date": "2026-08-24",
+        "streaming": 61545,
+        "user": 5290
+      },
+      {
+        "date": "2026-08-25",
+        "streaming": 61601,
+        "user": 5294
+      },
+      {
+        "date": "2026-08-26",
+        "streaming": 61661,
+        "user": 5296
+      }
+    ]
+  }
+];
+
+  const fmt = n => n.toLocaleString('en-US');
+  const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  function deltaEl(value, unit){
+    const cls = value > 0 ? 'pos' : (value < 0 ? 'neg' : 'flat');
+    const sign = value > 0 ? '▲' : (value < 0 ? '▼' : '–');
+    const span = document.createElement('span');
+    span.className = 'delta ' + cls;
+    span.textContent = value === 0 ? '– 변동 없음' : `${sign} ${fmt(Math.abs(value))}${unit || ''}`;
+    return span;
+  }
+
+  // ---- date range + song count labels ----
+  const allDates = [...new Set(RAW.flatMap(s => s.days.map(d => d.date)))].sort();
+  document.getElementById('dateRange').textContent =
+    allDates.length > 1 ? `${allDates[0]} → ${allDates[allDates.length-1]}` : allDates[0];
+  document.getElementById('songCount').textContent = `곡 ${RAW.length}개`;
+
+  // ---- totals strip ----
+  (function renderTotals(){
+    const latestDate = allDates[allDates.length-1];
+    const prevDate = allDates.length > 1 ? allDates[allDates.length-2] : null;
+    let sumStream = 0, sumUser = 0, dStream = 0, dUser = 0;
+    RAW.forEach(s => {
+      const last = s.days.find(d => d.date === latestDate);
+      const prev = prevDate ? s.days.find(d => d.date === prevDate) : null;
+      if (last) { sumStream += last.streaming; sumUser += last.user; }
+      if (last && prev) { dStream += last.streaming - prev.streaming; dUser += last.user - prev.user; }
+    });
+    const totals = document.getElementById('totals');
+    const cells = [
+      { label: '합계 누적 스트리밍', value: fmt(sumStream), delta: prevDate ? `▲ ${fmt(dStream)} (전일 대비)` : null },
+      { label: '합계 누적 리스너', value: fmt(sumUser), delta: prevDate ? `▲ ${fmt(dUser)} (전일 대비)` : null },
+      { label: '기준일', value: latestDate, delta: `${RAW.length}곡 트래킹 중` },
+    ];
+    cells.forEach(c => {
+      const div = document.createElement('div');
+      div.className = 'cell';
+      div.innerHTML = `<div class="label">${c.label}</div><div class="value">${c.value}</div>${c.delta ? `<div class="delta">${c.delta}</div>` : ''}`;
+      totals.appendChild(div);
+    });
+  })();
+
+  // ---- line chart renderer (generic, N points) ----
+  function renderLineChart(canvas, series, opts){
+    opts = opts || {};
+    const dpr = window.devicePixelRatio || 1;
+    const rect = canvas.getBoundingClientRect();
+    const w = rect.width || canvas.clientWidth || 300;
+    const h = rect.height || canvas.clientHeight || 64;
+    canvas.width = w * dpr;
+    canvas.height = h * dpr;
+    const ctx = canvas.getContext('2d');
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ctx.clearRect(0, 0, w, h);
+
+    const padL = opts.padL ?? 4, padR = opts.padR ?? 4, padT = opts.padT ?? 8, padB = opts.padB ?? (opts.showAxis ? 22 : 4);
+    const allPoints = series.flatMap(s => s.points);
+    if (!allPoints.length) return;
+    let minY = Math.min(...allPoints.map(p => p.y));
+    let maxY = Math.max(...allPoints.map(p => p.y));
+    if (minY === maxY) { minY -= 1; maxY += 1; }
+    const yPad = (maxY - minY) * 0.12;
+    minY -= yPad; maxY += yPad;
+
+    const xs = [...new Set(allPoints.map(p => p.x))];
+    const xPos = i => padL + (xs.length > 1 ? (i / (xs.length - 1)) * (w - padL - padR) : (w - padL - padR) / 2);
+    const yPos = v => padT + (1 - (v - minY) / (maxY - minY)) * (h - padT - padB);
+
+    if (opts.showGrid){
+      ctx.strokeStyle = cssVar('--border');
+      ctx.lineWidth = 1;
+      const gridLines = 4;
+      for (let i = 0; i <= gridLines; i++){
+        const y = padT + (i / gridLines) * (h - padT - padB);
+        ctx.beginPath();
+        ctx.moveTo(padL, Math.round(y) + 0.5);
+        ctx.lineTo(w - padR, Math.round(y) + 0.5);
+        ctx.stroke();
+      }
+    }
+
+    series.forEach(s => {
+      const pts = s.points.map(p => ({ x: xPos(xs.indexOf(p.x)), y: yPos(p.y) }));
+      if (opts.fill){
+        const grad = ctx.createLinearGradient(0, padT, 0, h - padB);
+        grad.addColorStop(0, s.color.replace(')', ' / 0.22)').replace('hsl', 'hsla'));
+        grad.addColorStop(1, s.color.replace(')', ' / 0)').replace('hsl', 'hsla'));
+        ctx.beginPath();
+        ctx.moveTo(pts[0].x, h - padB);
+        pts.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.lineTo(pts[pts.length-1].x, h - padB);
+        ctx.closePath();
+        ctx.fillStyle = grad;
+        ctx.fill();
+      }
+      ctx.beginPath();
+      ctx.strokeStyle = s.color;
+      ctx.lineWidth = opts.lineWidth || 2;
+      ctx.lineJoin = 'round';
+      ctx.lineCap = 'round';
+      pts.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+      ctx.stroke();
+
+      // Once there are many points, drawing a dot on every one turns into
+      // noise — thin them out but always keep the first and last (the
+      // points people actually look for: start and current).
+      const dotStep = pts.length > 40 ? Math.ceil(pts.length / 40) : 1;
+      pts.forEach((p, i) => {
+        const isEdge = i === 0 || i === pts.length - 1;
+        if (!isEdge && i % dotStep !== 0) return;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, i === pts.length - 1 ? 3.4 : 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = s.color;
+        ctx.fill();
+      });
+    });
+
+    if (opts.showAxis){
+      ctx.fillStyle = cssVar('--text-muted');
+      ctx.font = '11px ' + cssVar('--font-mono');
+      ctx.textBaseline = 'top';
+      // Space labels so they don't collide as the date range grows — show
+      // only as many as comfortably fit, always including the first and
+      // last date.
+      const approxLabelWidth = 78;
+      const maxLabels = Math.max(2, Math.floor((w - padL - padR) / approxLabelWidth));
+      const labelStep = xs.length > maxLabels ? Math.ceil((xs.length - 1) / (maxLabels - 1)) : 1;
+      xs.forEach((x, i) => {
+        const isEdge = i === 0 || i === xs.length - 1;
+        if (!isEdge && i % labelStep !== 0) return;
+        const px = xPos(i);
+        ctx.textAlign = i === 0 ? 'left' : (i === xs.length - 1 ? 'right' : 'center');
+        ctx.fillText(x, px, h - padB + 6);
+      });
+    }
+  }
+
+  // ---- song cards ----
+  const cardsEl = document.getElementById('cards');
+  const chartRefs = [];
+  RAW.forEach(song => {
+    const first = song.days[0], last = song.days[song.days.length - 1];
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+      <div class="card-head">
+        <span class="name">${song.name}</span>
+        <span class="dot" style="background: var(${song.color})"></span>
+      </div>
+      <div class="stat-row">
+        <div class="stat">
+          <span class="label">누적 스트리밍</span>
+          <span class="value">${fmt(last.streaming)}</span>
+        </div>
+        <div class="stat">
+          <span class="label">누적 리스너</span>
+          <span class="value">${fmt(last.user)}</span>
+        </div>
+      </div>
+      <canvas class="spark"></canvas>
+    `;
+    if (song.days.length > 1){
+      const row = card.querySelector('.stat-row');
+      row.children[0].appendChild(deltaEl(last.streaming - first.streaming));
+      row.children[1].appendChild(deltaEl(last.user - first.user));
+    }
+    cardsEl.appendChild(card);
+    const canvas = card.querySelector('canvas.spark');
+    chartRefs.push(() => renderLineChart(canvas, [{
+      color: cssVar(song.color),
+      points: song.days.map(d => ({ x: d.date, y: d.streaming }))
+    }], { fill: true, lineWidth: 2 }));
+  });
+
+  // ---- compare chart (indexed growth) ----
+  // A song needs at least 2 days of data to show a growth trend indexed to
+  // its own first day — with just 1 point it'd be a lone dot stranded on
+  // the shared timeline (all other songs' dates), which reads as a glitch
+  // rather than "not enough data yet". Hold those out until they qualify.
+  const compareCanvas = document.getElementById('compareChart');
+  const comparable = RAW.filter(song => song.days.length > 1);
+  const tooNew = RAW.filter(song => song.days.length <= 1);
+  function compareSeries(){
+    return comparable.map(song => {
+      const base = song.days[0].streaming;
+      return {
+        name: song.name,
+        color: cssVar(song.color),
+        points: song.days.map(d => ({ x: d.date, y: (d.streaming / base) * 100 }))
+      };
+    });
+  }
+  chartRefs.push(() => renderLineChart(compareCanvas, compareSeries(), { showAxis: true, showGrid: true, lineWidth: 2.4 }));
+
+  // legend
+  const legend = document.getElementById('legend');
+  comparable.forEach(song => {
+    const item = document.createElement('span');
+    item.className = 'legend-item';
+    item.innerHTML = `<span class="swatch" style="background: var(${song.color})"></span>${song.name}`;
+    legend.appendChild(item);
+  });
+  if (tooNew.length){
+    const note = document.createElement('span');
+    note.className = 'legend-item';
+    note.style.color = 'var(--text-muted)';
+    note.textContent = `${tooNew.map(s => s.name).join(', ')} — 데이터 2일 이상 쌓이면 표시됩니다`;
+    legend.appendChild(note);
+  }
+
+  // ---- table (newest date first per song, so growing history doesn't bury today's row) ----
+  const tbody = document.getElementById('tableBody');
+  RAW.forEach(song => {
+    const rows = song.days.map((d, i) => {
+      const prev = i > 0 ? song.days[i-1] : null;
+      return { d, prev };
+    }).reverse();
+    rows.forEach(({ d, prev }, i) => {
+      const tr = document.createElement('tr');
+      if (i === 0) tr.classList.add('group-start');
+      tr.innerHTML = `
+        <td class="name-cell">${i === 0 ? song.name : ''}</td>
+        <td>${d.date}</td>
+        <td class="num">${fmt(d.streaming)}</td>
+        <td class="num">${prev ? (d.streaming - prev.streaming >= 0 ? '+' : '') + fmt(d.streaming - prev.streaming) : '–'}</td>
+        <td class="num">${fmt(d.user)}</td>
+        <td class="num">${prev ? (d.user - prev.user >= 0 ? '+' : '') + fmt(d.user - prev.user) : '–'}</td>
+      `;
+      tbody.appendChild(tr);
+    });
+  });
+
+  // ---- draw + responsive redraw ----
+  function redrawAll(){ chartRefs.forEach(fn => fn()); }
+  requestAnimationFrame(redrawAll);
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(redrawAll, 120);
+  });
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => setTimeout(redrawAll, 50));
+</script>
